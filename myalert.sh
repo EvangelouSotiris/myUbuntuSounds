@@ -1,33 +1,29 @@
 if [ "$1" == "set" ]; then
-	for file in *.mp3
-		do ffmpeg -i "${file}" "${file/%mp3/ogg}"
-	done
 	
-	for file in *.wav
-		do ffmpeg -i "${file}" -acodec libvorbis "${file/%wav/ogg}"
-	done
-
-	mkdir -p "my_ogg_bells"  # bells in ubuntu are all .ogg sound files.
-
-	for song in *.ogg
-		do mv "${song}" "my_ogg_bells/."
-	done
-
-	if [ -d /usr/share/sounds/ubuntu/stereo/my_ogg_bells ]; then
-		sudo rm -rf /usr/share/sounds/ubuntu/stereo/my_ogg_bells
+	if [[ ${file: -4} != ".ogg" ]]; then 
+		ffmpeg -i "$2" "tempspound.ogg"
+	else
+		cp "$2" "tempsound.ogg"
 	fi
-	sudo mv my_ogg_bells /usr/share/sounds/ubuntu/stereo
+	CURRPATH=`pwd`
+	cd /usr/share/sounds/ubuntu/stereo
+	if [ "$3" == "--errorsound" ]; then
+		if [ -e "bell.ogg" ]; then
+			sudo rm "bell.ogg"
+		fi
+		sudo mv "${CURRPATH}/tempsound.ogg" bell.ogg
+	elif [ "$3" == "--startup" ]; then
+		if [ -e "system-ready.ogg" ]; then
+                        sudo rm "system-ready.ogg"
+                fi
+                sudo cp "${CURRPATH}/tempsound.ogg" system-ready.ogg
+	else
+		echo "Invalid option. Available options: --startup, --errorsound"
+	fi
 fi
 
-if [ "$1" == "change" ]; then
-	cd /usr/share/sounds/ubuntu/stereo/my_ogg_bells
-	RANDOMFILE=$(shuf -n 1 -e *)
-
-	cd ..
-	if [ -e "bell.ogg" ]; then
-		sudo rm "bell.ogg"
-	fi
-	echo ${RANDOMFILE}
-	cd my_ogg_bells
-	sudo cp "${RANDOMFILE}" ../bell.ogg
+if [ "$#" != "3"  ]; then
+	echo "No arguments set:"
+	echo "Run './myalert.sh set [FULLPATH] --[OPTION]' to set your own sounds."
+	echo "Available options: startup, errorsound"
 fi
