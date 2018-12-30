@@ -25,10 +25,10 @@ Usage pattern:
 ```
 ./myalert.sh set [FULLPATH] --[OPTION]
 ```
-FULLPATH = full path to the sound file you want to set as a system sound
-OPTION = the type of system sound. Use 'startup' to switch the startup sound and 'terminalbell' to change the terminal's bell sound.
+* FULLPATH = full path to the sound file you want to set as a system sound
+* OPTION = the type of system sound. Use 'startup' to switch the startup sound and 'terminalbell' to change the terminal's bell sound.
 
 After the changes, reboot your system to apply them.
 
-##Author
+## Author
 **Evangelou Sotiris** - *Developer* - [Github](https://github.com/EvangelouSotiris)
